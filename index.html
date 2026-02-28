@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday Amruta</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,900&family=Caveat:wght@500&family=Helvetica&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --bg: #ffffff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { background-color: var(--bg); overflow-x: hidden; font-family: 'Helvetica', sans-serif; }
+
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
+            opacity: 0.04; pointer-events: none; z-index: 1000;
+        }
+
+        .scroll-height { height: 700vh; position: relative; }
+        
+        .sticky-viewport {
+            position: sticky; top: 0; height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; background: #fff;
+            white-space: nowrap;
+        }
+        
+        .parallax-text {
+            position: absolute;
+            white-space: nowrap;
+            width: max-content;
+            font-family: 'Bodoni Moda', serif;
+            font-size: 58vh; 
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: 0.05em;
+            color: transparent; 
+            -webkit-text-stroke: 2px #fff; 
+            mix-blend-mode: difference; 
+            z-index: 100; 
+            pointer-events: none; 
+            will-change: transform;
+            left: 0;
+            visibility: hidden; 
+        }
+
+        .image-container { position: relative; width: 100vw; height: 100vh; z-index: 50; overflow: hidden; }
+        .panel { position: absolute; inset: 0; opacity: 0; transform: scale(1.1); transition: opacity 0.8s ease, transform 1.2s ease-out; }
+        .panel.active { opacity: 1; transform: scale(1); }
+        .panel img { width: 100%; height: 100%; object-fit: cover; }
+
+        .scroll-hint {
+            position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+            font-size: 10px; font-weight: bold; letter-spacing: 4px; text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.9); z-index: 150; padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); border-radius: 50px;
+        }
+
+        .letter-section {
+    background-color: #fff;
+    background-image: 
+        linear-gradient(90deg, transparent 39px, #d18d8b 39px, #d18d8b 41px, transparent 41px),
+        linear-gradient(#e1eef6 1px, transparent 1px);
+    background-size: 100% 2.6rem;
+    background-position: 0 0.4rem; 
+    padding: 60px 20px 60px 65px; 
+    min-height: 100vh; 
+    position: relative; 
+    z-index: 10;
+}
+
+.letter-content {
+    max-width: 90%; 
+    font-family: 'Caveat', cursive; 
+    font-size: 1.35rem; 
+    line-height: 2.6rem; 
+    color: #1a4d80; 
+    transform: rotate(-0.5deg);
+    margin-top: 0;
+    padding-top: 0;
+    transform-origin: left top;
+    position: relative;
+    top: 0.15rem; 
+}
+
+
+        .gold-name {
+            color: #d4af37;
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
+        }
+
+        .scratch-section {
+            background-color: #080808; min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;
+        }
+
+        .scratch-container {
+            position: relative; width: 320px; height: 450px;
+            background: #fff; border-radius: 15px; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            touch-action: none;
+        }
+
+        .secret-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://i.postimg.cc/zBDs27rg/1772269577432.png');
+            background-size: cover;
+            background-position: center;
+            z-index: 5;
+        }
+
+        .reveal-card {
+            background: rgba(255, 255, 255, 0.92); 
+            backdrop-filter: blur(8px); 
+            padding: 20px;
+            border-radius: 15px;
+            width: 88%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .reveal-title {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-size: 20px;
+            color: #e23744; 
+            margin-bottom: 5px;
+        }
+
+        .gift-info {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px dashed #ccc;
+            text-align: left;
+        }
+
+        .gift-info p {
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 6px;
+            font-family: 'Helvetica', sans-serif;
+        }
+
+        .gift-info b { color: #222; font-size: 12px; }
+
+        #scratchCanvas {
+            position: absolute; top: 0; left: 0;
+            cursor: crosshair; z-index: 20;
+            transition: opacity 0.8s ease;
+            touch-action: none;
+        }
+
+        .zomato-btn {
+            display: inline-block;
+            margin-top: 10px; padding: 12px 20px; background: #E23744; 
+            color: #fff; text-decoration: none; font-size: 10px;
+            letter-spacing: 1px; font-weight: bold; border-radius: 4px;
+        }
+
+        .copy-trigger {
+            color: #e23744;
+            font-weight: bold;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 5px;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grain"></div>
+
+    <div class="scroll-height" id="scrollContainer">
+        <div class="sticky-viewport">
+            <div class="scroll-hint">SCROLL SLOWLY :)</div>
+            <div class="parallax-text" id="textLayer">AMRUTA</div>
+            <div class="image-container">
+                <div class="panel active"><img src="https://i.postimg.cc/hGnXtp6h/IMG_20260227_112210_744.jpg"></div>
+                <div class="panel"><img src="https://i.postimg.cc/bvPZw3W1/IMG_20260227_112213_832.jpg"></div>
+                <div class="panel"><img src="https://i.postimg.cc/VknSw3G5/amrutasanap_13_20260228_0001.jpg"></div>
+                <div class="panel"><img src="https://i.postimg.cc/VknSw3GX/IMG_20260227_112728_792.png"></div>
+                <div class="panel"><img src="https://i.postimg.cc/YS7vCbZ6/IMG_20260227_112138_453.jpg"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="letter-section">
+        <div class="letter-content">
+            Dear <span class="gold-name">Amruta</span>,<br>
+            Happy Birthday! Many, many happy returns of the day, dear.  You are a <b>wonderful</b> human being. I am grateful to be connected with someone so <b>kind</b> and <b>lovely</b>. And about your dedication to academics — I truly admire it. <br>
+             I wish I could study even half as much as you do 🫡. I am such a lazy person, you know. But given the fact that I created, tested, and iterated this page ‘n’ number of times, I surely can study as well, provided I take <i>suo motu</i> interest in it.<br>
+             I wish you a wonderful year ahead — until I wish you the same again next year 😉😌
+            
+            <div style="text-align: right; margin-top: 20px;">
+                Yours, ❤️<br>
+                😊🥰💞<br>
+                <b>Tejas</b>
+            </div>
+        </div>
+    </div>
+
+    <div class="scratch-section">
+        <h2 style="color:#d4af37; font-family:'Bodoni Moda'; margin-bottom:20px; letter-spacing: 2px;">A small gift for you</h2>
+        <div class="scratch-container">
+            <div class="secret-content">
+                <div class="reveal-card">
+                    <h3 class="reveal-title">Enjoy your treat! 🎂</h3>
+                    <p style="font-size: 11px; color: #666; font-style: italic; margin-bottom: 10px;">Please, naahi mhanu nakos/p>
+                    
+                    <div class="gift-info">
+                        <p>Code: <b id="giftCode">7000869787090388</b> <span class="copy-trigger" onclick="copyToClipboard()" id="copyBtn">[COPY]</span></p>
+                        <p>PIN: <b>275909</b></p>
+                        <p>Expires: <b>27 Feb 2030, 12:00 am</b></p>
+                    </div>
+
+                    <a href="https://link.zomato.com/xqzv/gctype172?code=7000869787090388" class="zomato-btn">OPEN ZOMATO APP</a>
+                </div>
+            </div>
+            <canvas id="scratchCanvas" width="320" height="450"></canvas>
+        </div>
+        <p style="color: #666; font-size: 10px; margin-top: 15px; letter-spacing: 1px;">SCRATCH FOIL TO REVEAL</p>
+    </div>
+
+    <script>
+        /* --- PARALLAX LOGIC --- */
+        const container = document.getElementById('scrollContainer');
+        const textLayer = document.getElementById('textLayer');
+        const panels = document.querySelectorAll('.panel');
+        let textWidth = 0, windowWidth = window.innerWidth, prevActiveIndex = 0;
+
+        document.fonts.ready.then(() => {
+            textWidth = textLayer.offsetWidth;
+            textLayer.style.visibility = 'visible';
+            updateScroll();
+        });
+
+        function updateScroll() {
+            const containerRect = container.getBoundingClientRect();
+            const maxScroll = container.offsetHeight - window.innerHeight;
+            const currentScroll = -containerRect.top;
+            let progress = Math.max(0, Math.min(1, currentScroll / maxScroll));
+
+            const totalTravel = windowWidth + textWidth;
+            const currentX = windowWidth - (progress * totalTravel);
+            textLayer.style.transform = `translate3d(${currentX}px, 0, 0)`;
+
+            const activeIndex = Math.min(Math.floor(progress * panels.length), panels.length - 1);
+            if (activeIndex !== prevActiveIndex) {
+                panels[prevActiveIndex].classList.remove('active');
+                panels[activeIndex].classList.add('active');
+                prevActiveIndex = activeIndex;
+            }
+        }
+        window.addEventListener('scroll', () => window.requestAnimationFrame(updateScroll));
+
+        /* --- SCRATCH LOGIC --- */
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        let isDrawing = false, isFaded = false, lastX = null, lastY = null;
+
+        function initCanvas() {
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            grad.addColorStop(0, '#d4af37'); grad.addColorStop(0.3, '#f9f295');
+            grad.addColorStop(0.5, '#b8860b'); grad.addColorStop(0.7, '#f9f295');
+            grad.addColorStop(1, '#d4af37');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for(let i=0; i<800; i++) {
+                ctx.fillStyle = 'rgba(0,0,0,0.12)';
+                ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 1, 2);
+            }
+        }
+
+        function handleScratch(x, y) {
+            if (isFaded) return;
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round'; 
+            ctx.lineWidth = 45;
+            ctx.beginPath();
+            if(lastX !== null) ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            lastX = x; lastY = y;
+            checkReveal();
+        }
+
+        function checkReveal() {
+            const data = ctx.getImageData(50, 50, canvas.width - 100, canvas.height - 100).data;
+            let transparent = 0;
+            for (let i = 3; i < data.length; i += 16) {
+                if (data[i] === 0) transparent++;
+            }
+            if (transparent / (data.length / 16) > 0.45) {
+                isFaded = true;
+                canvas.style.opacity = '0';
+                setTimeout(() => canvas.style.display = 'none', 800);
+            }
+        }
+
+        function getXY(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        canvas.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getXY(e); lastX = pos.x; lastY = pos.y; });
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; const pos = getXY(e); lastX = pos.x; lastY = pos.y; e.preventDefault(); }, { passive: false });
+        window.addEventListener('mouseup', () => { isDrawing = false; lastX = null; });
+        window.addEventListener('touchend', () => { isDrawing = false; lastX = null; });
+
+        canvas.addEventListener('mousemove', (e) => { if (!isDrawing) return; const { x, y } = getXY(e); handleScratch(x, y); });
+        canvas.addEventListener('touchmove', (e) => { if (!isDrawing) return; e.preventDefault(); const { x, y } = getXY(e); handleScratch(x, y); }, { passive: false });
+
+        initCanvas();
+
+        /* --- ROBUST COPY LOGIC --- */
+        function copyToClipboard() {
+            const textToCopy = document.getElementById('giftCode').innerText;
+            const btn = document.getElementById('copyBtn');
+            
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                btn.innerText = '[COPIED!]';
+                btn.style.color = '#2d9e6d';
+            } catch (err) {
+                btn.innerText = '[FAILED]';
+            }
+            
+            document.body.removeChild(textArea);
+            setTimeout(() => {
+                btn.innerText = '[COPY]';
+                btn.style.color = '#e23744';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
